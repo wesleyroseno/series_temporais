@@ -1,0 +1,27 @@
+---
+lang: pt-BR
+title: "<center>Séries Temporais</center>"
+subtitle: "<center>Temperaturas Médias Mensais</center>"
+author:
+  - name: "Adrielly Rocha de Sousa Ferreira"
+  - name: "Wesley Roseno Saraiva"
+date: 06-27-2025
+bibliography:
+  - referencias/referencias.bib
+format:
+  html:
+    toc: true
+    toc-location: left
+    code-fold: true
+    self-contained-math: true
+    embed-resources: true
+    theme: darkly
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+1 + 1
+```
