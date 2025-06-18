@@ -257,3 +257,11 @@ Para Ubatuba, a análise revela um resultado diferente. O modelo encontrou uma t
 - Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de [-0.00110, -0.00020]. Crucialmente, este intervalo não contém o valor zero e está inteiramente no campo negativo. Isso reforça a conclusão de que existe uma tendência de arrefecimento estatisticamente significativa, embora a sua magnitude seja muito pequena (uma redução de aproximadamente 0.00065 °C por mês).
 
 Conclusão para Ubatuba: Há evidência estatística de uma leve tendência de arrefecimento em Ubatuba durante o período analisado. No entanto, é importante notar que, apesar da significância estatística, a magnitude do efeito prático é mínima.
+
+## Caracterização do Ciclo Sazonal
+
+A Sazonalidade pode ser percebida quando se é removido o componente de tendencia da série temporal. Como não há evidência estatística de uma tendência em Cananéia, podemos assumir a sua série da Figura [-@fig-serie] como a sua sazonalidade mais a componente de ruído. O memso vale para Ubatuba, pois apesar de haver evidência estatística de uma tendência em Ubatuba, a magnitude do efeito prático é mínima.
+
+# Modelagem Estocástica com Modelos SARIMA
+
+## Fundamentos dos Modelos SARIMA
