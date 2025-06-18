@@ -51,9 +51,11 @@ for (p in pacotes) {
 
 Este relatório foca-se em duas localidades costeiras de São Paulo: Cananéia e Ubatuba. Cananéia está no Litoral Sul, numa região de estuário, enquanto Ubatuba, no Litoral Norte, tem maior exposição ao Atlântico. A análise comparativa permite investigar como estas diferenças geográficas se traduzem em padrões de temperatura distintos.
 
-**Gráfico: Distancia entre Cananéia e Ubatuba.**
+**Figura [-@fig-grafico]: Distancia entre Cananéia e Ubatuba.**
 
-```{r mapa}
+```{r}
+#| label: fig-grafico
+#| fig-cap: ""
 # Definição das coordenadas
 coords <- data.frame(
   cidade = c("Cananéia", "Ubatuba"),
@@ -110,7 +112,6 @@ leaflet(data = coords) %>%
   )
 ```
 
-
 ## O Conjunto de Dados: Estrutura
 
 Os dados são de temperaturas médias mensais (°C) de janeiro de 1976 a dezembro de 1985. São duas séries temporais, cada uma com 120 observações.
@@ -134,9 +135,11 @@ ubatuba_ts <- ts(df_raw$Ubatuba, start = c(1976, 1), frequency = 12)
 
 Ambas as séries exibem um padrão cíclico anual, indicando uma componente sazonal. Visualmente, Ubatuba parece ser consistentemente mais quente, exceto no ano de 1983.
 
-**Gráfico: Séries temporais de temperatura para Cananéia e Ubatuba.**
+**Figura [-@fig-serie]: Séries temporais de temperatura para Cananéia e Ubatuba.**
 
-```{r plot_series}
+```{r}
+#| label: fig-serie
+#| fig-cap: ""
 # Plotando as séries temporais com ggplot2
 df_raw %>%
   pivot_longer(cols = c(Cananeia, Ubatuba), names_to = "Localidade", values_to = "Temperatura") %>%
@@ -152,9 +155,12 @@ df_raw %>%
   theme(legend.position = "bottom")
 ```
 
-**Tabela: Estatísticas Descritivas das Temperaturas Médias Mensais (°C)**
+**Tabela [-@tbl-descritiva]: Estatísticas Descritivas das Temperaturas Médias Mensais (°C)**
 
-```{r descritiva}
+
+```{r}
+#| label: tbl-descritiva
+#| tbl-cap: ""
 # Cálculo das estatísticas básicas
 resumo_Cananeia <- summary(df_raw$Cananeia)
 resumo_Ubatuba <- summary(df_raw$Ubatuba)
@@ -183,7 +189,7 @@ knitr::kable(df_resumo,
              )
 ```
 
-A Tabela 1 quantifica que Ubatuba é, em média, 0,9°C mais quente, sendo maior também  a sua temperatura mediana. E apesar de Ubatuba ter a menor e maior temperatura, Cananéia apresenta um desvio padrão ligeiramente maior, indicando maior variabilidade em torno da sua média.
+A Tabela [-@tbl-descritiva] quantifica que Ubatuba é, em média, 0,9°C mais quente, sendo maior também  a sua temperatura mediana. E apesar de Ubatuba ter a menor e maior temperatura, Cananéia apresenta um desvio padrão ligeiramente maior, indicando maior variabilidade em torno da sua média.
 
 # Decomposição Estrutural das Séries Temporais
 
