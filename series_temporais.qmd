@@ -14,6 +14,7 @@ format:
     toc-location: left
     toc_float: yes
     code-fold: true
+    self_contained: true
     self-contained-math: true
     embed-resources: true
     theme: darkly
@@ -29,7 +30,9 @@ pacotes <- c(
   "lubridate",
   "forecast",
   "tseries",
-  "readxl"
+  "readxl",
+  "leaflet",
+  "geosphere"
 )
 
 # Loop para verificar, instalar (se necessário) e carregar cada pacote
@@ -46,6 +49,64 @@ for (p in pacotes) {
 ## 1.1. Contexto Geográfico e Climatológico
 
 Este relatório foca-se em duas localidades costeiras de São Paulo: Cananéia e Ubatuba. Cananéia está no Litoral Sul, numa região de estuário, enquanto Ubatuba, no Litoral Norte, tem maior exposição ao Atlântico. A análise comparativa permite investigar como estas diferenças geográficas se traduzem em padrões de temperatura distintos.
+
+```{r mapa}
+# Definição das coordenadas
+coords <- data.frame(
+  cidade = c("Cananéia", "Ubatuba"),
+  lat    = c(-25.012621, -23.4336713),
+  lon    = c(-47.9338687, -45.0838529)
+)
+
+# Calcula distância geodésica em metros e converte para quilômetros
+dist_m <- distGeo(c(coords$lon[1], coords$lat[1]), c(coords$lon[2], coords$lat[2]))
+dist_km <- round(dist_m / 1000, 2)
+
+# Calcula ponto médio para posicionar o rótulo
+mid_lat <- mean(coords$lat)
+mid_lon <- mean(coords$lon)
+
+# Cria o mapa
+leaflet(data = coords) %>%
+  addTiles() %>%  # camada base OpenStreetMap
+  addCircleMarkers(
+    lng = ~lon, lat = ~lat,
+    label = ~cidade,
+    radius = 8,
+    color = "navy",
+    fillColor = "skyblue",
+    fillOpacity = 0.7,
+    stroke = TRUE, weight = 1
+  ) %>%
+  # Adiciona linha conectando as cidades
+  addPolylines(
+    lng = coords$lon, lat = coords$lat,
+    color = "red",
+    weight = 2,
+    opacity = 0.8
+  ) %>%
+  # Adiciona rótulo com a distância no ponto médio
+  addLabelOnlyMarkers(
+    lng = mid_lon, lat = mid_lat,
+    label = paste0(dist_km, " km"),
+    labelOptions = labelOptions(
+      noHide = TRUE,
+      direction = "center",
+      textOnly = TRUE,
+      style = list(
+        "color" = "red",
+        "font-weight" = "bold",
+        "background" = "white",
+        "padding" = "4px"
+      )
+    )
+  ) %>%
+  addControl(
+    html = "<strong>Cidades Litorâneas de SP</strong>",
+    position = "topright"
+  )
+```
+
 
 ## 1.2. O Conjunto de Dados: Estrutura
 

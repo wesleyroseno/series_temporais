@@ -1,7 +1,8 @@
 project:
   title: "series_temporais"
+  output-dir: "."
+output-file: "series_temporais.html"
 #   output-dir: "docs"
 # output-file: "index.html"
-output-file: "series_temporais.html"
 editor: source
 
