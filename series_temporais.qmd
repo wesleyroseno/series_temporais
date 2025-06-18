@@ -197,3 +197,63 @@ A Tabela [-@tbl-descritiva] quantifica que Ubatuba é, em média, 0,9°C mais qu
 Usamos um modelo de decomposição aditivo ($Y_t = T_t + S_t + I_t$), pois a amplitude das flutuações sazonais parece constante ao longo do tempo.
 
 ## Análise do Componente de Tendência
+
+Para formalizar a análise visual da tendência, ajustamos um modelo de regressão linear simples para cada localidade, onde a temperatura é a variável resposta e o tempo (representado por um índice numérico de 1 a 120 meses) é a variável preditora. O objetivo é testar se a inclinação da linha de tendência é estatisticamente diferente de zero.
+
+### Cananéia
+
+```{r}
+# --- Executando a Regressão Linear Simples ---
+
+# 1. Modelo para Cananéia
+modelo_cananeia <- lm(Cananeia ~ Ano, data = df_raw)
+
+# --- Visualizando os Resultados ---
+
+# O comando summary() fornece uma visão completa, incluindo coeficientes e p-valores.
+
+cat("--- Resultados da Regressão para Cananéia ---\n")
+print(summary(modelo_cananeia))
+
+# --- Calculando e Exibindo os Intervalos de Confiança de 95% ---
+
+cat("--- Intervalo de Confiança (95%) para Cananéia ---\n")
+print(confint(modelo_cananeia))
+```
+Para Cananéia, o modelo de regressão não encontrou uma tendência temporal estatisticamente significativa. A análise dos resultados confirma esta conclusão de duas maneiras principais:
+
+- P-valor: O coeficiente para a variável de tempo (Ano) foi de -4.955e-05, um valor extremamente próximo de zero. O p-valor associado a este coeficiente é de 0.841, que é muito superior ao nível de significância padrão de 0.05. Isso indica que não há evidências para rejeitar a hipótese nula de que o coeficiente é igual a zero.
+
+- Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de [-0.000536, 0.000437]. Como este intervalo contém o valor zero, temos uma forte confirmação de que a pequena tendência observada nos dados é indistinguível de uma variação aleatória.
+
+Conclusão para Cananéia: Não há evidência estatística de uma tendência de aquecimento ou arrefecimento em Cananéia durante o período de 1976 a 1985.
+
+### Ubatuba
+
+```{r}
+# --- Executando a Regressão Linear Simples ---
+
+# 2. Modelo para Ubatuba
+modelo_ubatuba <- lm(Ubatuba ~ Ano, data = df_raw)
+
+
+# --- Visualizando os Resultados ---
+
+# O comando summary() fornece uma visão completa, incluindo coeficientes e p-valores.
+
+cat("\n--- Resultados da Regressão para Ubatuba ---\n")
+print(summary(modelo_ubatuba))
+
+# --- Calculando e Exibindo os Intervalos de Confiança de 95% ---
+
+cat("\n--- Intervalo de Confiança (95%) para Ubatuba ---\n")
+print(confint(modelo_ubatuba))
+```
+
+Para Ubatuba, a análise revela um resultado diferente. O modelo encontrou uma tendência de arrefecimento pequena, mas estatisticamente significativa:
+
+- P-valor: O coeficiente para a variável de tempo foi de -0.000647, indicando uma leve tendência de arrefecimento. O p-valor associado é de 0.00538, que é significativamente inferior a 0.05. Isso sugere que a tendência observada é improvável de ter ocorrido por acaso.
+
+- Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de [-0.00110, -0.00020]. Crucialmente, este intervalo não contém o valor zero e está inteiramente no campo negativo. Isso reforça a conclusão de que existe uma tendência de arrefecimento estatisticamente significativa, embora a sua magnitude seja muito pequena (uma redução de aproximadamente 0.00065 °C por mês).
+
+Conclusão para Ubatuba: Há evidência estatística de uma leve tendência de arrefecimento em Ubatuba durante o período analisado. No entanto, é importante notar que, apesar da significância estatística, a magnitude do efeito prático é mínima.
