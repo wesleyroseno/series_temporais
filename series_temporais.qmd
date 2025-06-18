@@ -265,3 +265,13 @@ A Sazonalidade pode ser percebida quando se é removido o componente de tendenci
 # Modelagem Estocástica com Modelos SARIMA
 
 ## Fundamentos dos Modelos SARIMA
+
+## Pré-processamento: Testes de Estacionariedade
+
+## Identificação do Modelo: Análise ACF e PACF
+
+## Estimação e Seleção do Modelo Final
+
+# Diagnóstico do Modelo
+
+## Análise dos Resíduos
