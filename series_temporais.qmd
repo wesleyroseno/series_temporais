@@ -7,21 +7,81 @@ author:
   - name: "Wesley Roseno Saraiva"
 date: 06-27-2025
 bibliography:
-  - referencias/referencias.bib
+  - "referencias/referencias.bib"
 format:
   html:
     toc: true
     toc-location: left
+    toc_float: yes
     code-fold: true
     self-contained-math: true
     embed-resources: true
     theme: darkly
 ---
 
-## Quarto
+```{r setup, message = FALSE, warning = FALSE}
+# Configurações globais para os blocos de código
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = 'center')
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+# Vetor com os nomes dos pacotes que você deseja usar
+pacotes <- c(
+  "tidyverse",  # inclui ggplot2, dplyr, tidyr, magrittr (%>%), etc.
+  "lubridate",
+  "forecast",
+  "tseries",
+  "readxl"
+)
 
-```{r}
-1 + 1
+# Loop para verificar, instalar (se necessário) e carregar cada pacote
+for (p in pacotes) {
+  if (!requireNamespace(p, quietly = TRUE)) {
+    install.packages(p)
+  }
+  library(p, character.only = TRUE)
+}
+```
+
+# Seção 1: Introdução e Análise Exploratória dos Dados
+
+## 1.1. Contexto Geográfico e Climatológico
+
+Este relatório foca-se em duas localidades costeiras de São Paulo: Cananéia e Ubatuba. Cananéia está no Litoral Sul, numa região de estuário, enquanto Ubatuba, no Litoral Norte, tem maior exposição ao Atlântico. A análise comparativa permite investigar como estas diferenças geográficas se traduzem em padrões de temperatura distintos.
+
+## 1.2. O Conjunto de Dados: Estrutura
+
+Os dados são de temperaturas médias mensais (°C) de janeiro de 1976 a dezembro de 1985. São duas séries temporais, cada uma com 120 observações.
+
+
+```{r dados}
+df_raw <- readxl::read_excel(
+  path = "dados/temperatura.xls",
+  sheet = "Plan1",
+  col_names = TRUE
+)
+
+df_raw$Ano <- seq(as.Date("1976-01-01"), as.Date("1985-12-01"), by="month")
+
+# Converter para objetos de série temporal (ts)
+cananeia_ts <- ts(df_raw$Cananeia, start = c(1976, 1), frequency = 12)
+ubatuba_ts <- ts(df_raw$Ubatuba, start = c(1976, 1), frequency = 12)
+```
+
+## 1.3. Análise Visual e Descritiva Preliminar
+
+Ambas as séries exibem um padrão cíclico anual, indicando uma componente sazonal. Visualmente, Ubatuba parece ser consistentemente mais quente.
+
+```{r plot_series, fig.cap="Gráfico das séries temporais de temperatura para Cananéia e Ubatuba."}
+# Plotando as séries temporais com ggplot2
+df_raw %>%
+  pivot_longer(cols = c(Cananeia, Ubatuba), names_to = "Localidade", values_to = "Temperatura") %>%
+  ggplot(aes(x = Ano, y = Temperatura, color = Localidade)) +
+  geom_line(linewidth = 1) +
+  labs(
+    title = "Temperaturas Médias Mensais (1976-1985)",
+    x = "Ano",
+    y = "Temperatura (°C)"
+  ) +
+  scale_color_manual(values = c("Cananeia" = "royalblue", "Ubatuba" = "darkorange")) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
 ```

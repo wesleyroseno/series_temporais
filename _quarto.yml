@@ -1,5 +1,6 @@
 project:
   title: "series_temporais"
-
+#   output-dir: "docs"
+# output-file: "index.html"
 editor: source
 
