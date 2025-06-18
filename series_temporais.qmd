@@ -19,6 +19,7 @@ format:
     embed-resources: true
     theme: darkly
     number-sections: true
+    css: styles.css
 ---
 
 ```{r setup, message = FALSE, warning = FALSE}
@@ -51,11 +52,10 @@ for (p in pacotes) {
 
 Este relatório foca-se em duas localidades costeiras de São Paulo: Cananéia e Ubatuba. Cananéia está no Litoral Sul, numa região de estuário, enquanto Ubatuba, no Litoral Norte, tem maior exposição ao Atlântico. A análise comparativa permite investigar como estas diferenças geográficas se traduzem em padrões de temperatura distintos.
 
-**Figura [-@fig-grafico]: Distancia entre Cananéia e Ubatuba.**
+**Figura [-@fig-distancia]: Distancia entre Cananéia e Ubatuba.**
 
 ```{r}
-#| label: fig-grafico
-#| fig-cap: ""
+#| label: fig-distancia
 # Definição das coordenadas
 coords <- data.frame(
   cidade = c("Cananéia", "Ubatuba"),
@@ -139,7 +139,6 @@ Ambas as séries exibem um padrão cíclico anual, indicando uma componente sazo
 
 ```{r}
 #| label: fig-serie
-#| fig-cap: ""
 # Plotando as séries temporais com ggplot2
 df_raw %>%
   pivot_longer(cols = c(Cananeia, Ubatuba), names_to = "Localidade", values_to = "Temperatura") %>%

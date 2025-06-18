@@ -1,3 +1,5 @@
-.quarto-figure + p.caption {
+/* Oculta figcaptions automáticos sem legenda */
+
+figcaption.quarto-float-caption.quarto-uncaptioned {
   display: none !important;
 }
