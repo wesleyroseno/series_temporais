@@ -286,4 +286,6 @@ A Sazonalidade pode ser percebida quando se é removido o componente de tendenci
 
 # Diagnóstico do Modelo
 
-## Análise dos Resíduos
+## Análise de diagnóstico dos Resíduos
+
+## Algumas Previsões
