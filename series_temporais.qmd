@@ -86,9 +86,9 @@ df_raw %>%
   theme(legend.position = "bottom")
 ```
 
-<!-- **Tabela 1: Estatísticas Descritivas das Temperaturas Médias Mensais (°C)** -->
+**Tabela 1: Estatísticas Descritivas das Temperaturas Médias Mensais (°C)**
 
-```{r desccritiva}
+```{r descritiva}
 # Cálculo das estatísticas básicas
 resumo_Cananeia <- summary(df_raw$Cananeia)
 resumo_Ubatuba <- summary(df_raw$Ubatuba)
@@ -115,7 +115,7 @@ df_resumo <- rbind(df_resumo, df_sd)
 knitr::kable(df_resumo, row.names = FALSE)
 ```
 
-A Tabela 1 quantifica que Ubatuba é, em média, 0,9°C mais quente. Cananéia apresenta um desvio padrão ligeiramente maior, indicando maior variabilidade em torno da sua média.
+A Tabela 1 quantifica que Ubatuba é, em média, 0,9°C mais quente, sendo maior também  a sua temperatura mediana. E apesar de Ubatuba ter a menor e maior temperatura, Cananéia apresenta um desvio padrão ligeiramente maior, indicando maior variabilidade em torno da sua média.
 
 # Seção 2: Decomposição Estrutural das Séries Temporais
 
