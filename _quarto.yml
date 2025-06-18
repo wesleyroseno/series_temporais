@@ -2,5 +2,6 @@ project:
   title: "series_temporais"
 #   output-dir: "docs"
 # output-file: "index.html"
+output-file: "series_temporais.html"
 editor: source
 

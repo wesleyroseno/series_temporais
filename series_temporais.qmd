@@ -68,7 +68,7 @@ ubatuba_ts <- ts(df_raw$Ubatuba, start = c(1976, 1), frequency = 12)
 
 ## 1.3. Análise Visual e Descritiva Preliminar
 
-Ambas as séries exibem um padrão cíclico anual, indicando uma componente sazonal. Visualmente, Ubatuba parece ser consistentemente mais quente.
+Ambas as séries exibem um padrão cíclico anual, indicando uma componente sazonal. Visualmente, Ubatuba parece ser consistentemente mais quente, exceto no ano de 1983.
 
 ```{r plot_series, fig.cap="Gráfico das séries temporais de temperatura para Cananéia e Ubatuba."}
 # Plotando as séries temporais com ggplot2
@@ -85,3 +85,42 @@ df_raw %>%
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
+
+<!-- **Tabela 1: Estatísticas Descritivas das Temperaturas Médias Mensais (°C)** -->
+
+```{r desccritiva}
+# Cálculo das estatísticas básicas
+resumo_Cananeia <- summary(df_raw$Cananeia)
+resumo_Ubatuba <- summary(df_raw$Ubatuba)
+df_resumo <- data.frame(
+  Estatística = c("Valor mínimo", "1º Quartil", "Mediana", "Média", "3º Quartil", "Valor Máximo"),
+  Cananeia = round(as.numeric(resumo_Cananeia), 1),
+  Ubatuba = round(as.numeric(resumo_Ubatuba), 1)
+)
+
+# Cálculo do desvio padrão
+sd_Cananeia <- round(sd(df_raw$Cananeia, na.rm = TRUE), 1)
+sd_Ubatuba  <- round(sd(df_raw$Ubatuba,  na.rm = TRUE), 1)
+
+# Criar data frame para desvio padrão e adicionar ao resumo
+df_sd <- data.frame(
+  Estatística = "Desvio padrão",
+  Cananeia    = sd_Cananeia,
+  Ubatuba     = sd_Ubatuba
+)
+
+df_resumo <- rbind(df_resumo, df_sd)
+
+# Exibir tabela final
+knitr::kable(df_resumo, row.names = FALSE)
+```
+
+A Tabela 1 quantifica que Ubatuba é, em média, 0,9°C mais quente. Cananéia apresenta um desvio padrão ligeiramente maior, indicando maior variabilidade em torno da sua média.
+
+# Seção 2: Decomposição Estrutural das Séries Temporais
+
+## 2.1. Metodologia de Decomposição
+
+Usamos um modelo de decomposição aditivo ($Y_t = T_t + S_t + I_t$), pois a amplitude das flutuações sazonais parece constante ao longo do tempo.
+
+## 2.2. Análise do Componente de Tendência
