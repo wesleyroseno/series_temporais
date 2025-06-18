@@ -194,7 +194,19 @@ A Tabela [-@tbl-descritiva] quantifica que Ubatuba é, em média, 0,9°C mais qu
 
 ## Metodologia de Decomposição
 
-Usamos um modelo de decomposição aditivo ($Y_t = T_t + S_t + I_t$), pois a amplitude das flutuações sazonais parece constante ao longo do tempo.
+Escolhemos um modelo aditivo pois a amplitude das flutuações sazonais parece constante ao longo do tempo. O modelo de decomposição aditivo, a série temporal é expressa como:
+
+$$
+Z_t = T_t + S_t + a_t
+$$ {#eq-decomp}
+
+Onde:
+
+* $Z_t$ é a observação da série temporal no instante $t$;
+* $T_t$ representa a componente de tendência;
+* $S_t$ representa a componente de sazonalidade;
+* $a_t$ é o termo de ruído.
+
 
 ## Análise do Componente de Tendência
 
@@ -260,7 +272,7 @@ Conclusão para Ubatuba: Há evidência estatística de uma leve tendência de a
 
 ## Caracterização do Ciclo Sazonal
 
-A Sazonalidade pode ser percebida quando se é removido o componente de tendencia da série temporal. Como não há evidência estatística de uma tendência em Cananéia, podemos assumir a sua série da Figura [-@fig-serie] como a sua sazonalidade mais a componente de ruído. O memso vale para Ubatuba, pois apesar de haver evidência estatística de uma tendência em Ubatuba, a magnitude do efeito prático é mínima.
+A Sazonalidade pode ser percebida quando se é removido o componente de tendencia $T_t$ da série temporal $Z_t$, conforme a Equação [-@eq-decomp]. Como não há evidência estatística de uma tendência em Cananéia, podemos assumir a sua série da Figura [-@fig-serie] como a sua sazonalidade $S_t$ mais a componente de ruído $a_t$. O memso vale para Ubatuba, pois apesar de haver evidência estatística de uma tendência em Ubatuba, a magnitude do efeito prático é mínima.
 
 # Modelagem Estocástica com Modelos SARIMA
 
