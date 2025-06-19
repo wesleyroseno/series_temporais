@@ -238,7 +238,7 @@ Para Cananéia, o modelo de regressão não encontrou uma tendência temporal es
 
 - Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de [-0.000536, 0.000437]. Como este intervalo contém o valor zero, temos uma forte confirmação de que a pequena tendência observada nos dados é indistinguível de uma variação aleatória.
 
-Conclusão para Cananéia: Não há evidência estatística de uma tendência de aquecimento ou arrefecimento em Cananéia durante o período de 1976 a 1985.
+Conclusão para Cananéia: Não há evidência estatística de uma tendência de aquecimento ou resfriamento em Cananéia durante o período de 1976 a 1985.
 
 ### Ubatuba
 
@@ -262,13 +262,13 @@ cat("\n--- Intervalo de Confiança (95%) para Ubatuba ---\n")
 print(confint(modelo_ubatuba))
 ```
 
-Para Ubatuba, a análise revela um resultado diferente. O modelo encontrou uma tendência de arrefecimento pequena, mas estatisticamente significativa:
+Para Ubatuba, a análise revela um resultado diferente. O modelo encontrou uma tendência pequena de resfriamento, mas estatisticamente significativa:
 
-- P-valor: O coeficiente para a variável de tempo foi de -0.000647, indicando uma leve tendência de arrefecimento. O p-valor associado é de 0.00538, que é significativamente inferior a 0.05. Isso sugere que a tendência observada é improvável de ter ocorrido por acaso.
+- P-valor: O coeficiente para a variável de tempo foi de -0.000647, indicando uma leve tendência de resfriamento. O p-valor associado é de 0.00538, que é significativamente inferior a 0.05. Isso sugere que a tendência observada é improvável de ter ocorrido por acaso.
 
-- Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de [-0.00110, -0.00020]. Crucialmente, este intervalo não contém o valor zero e está inteiramente no campo negativo. Isso reforça a conclusão de que existe uma tendência de arrefecimento estatisticamente significativa, embora a sua magnitude seja muito pequena (uma redução de aproximadamente 0.00065 °C por mês).
+- Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de [-0.00110, -0.00020]. Crucialmente, este intervalo não contém o valor zero e está inteiramente no campo negativo. Isso reforça a conclusão de que existe uma tendência de resfriamento estatisticamente significativa, embora a sua magnitude seja muito pequena (uma redução de aproximadamente 0.00065 °C por mês).
 
-Conclusão para Ubatuba: Há evidência estatística de uma leve tendência de arrefecimento em Ubatuba durante o período analisado. No entanto, é importante notar que, apesar da significância estatística, a magnitude do efeito prático é mínima.
+Conclusão para Ubatuba: Há evidência estatística de uma leve tendência de resfriamento em Ubatuba durante o período analisado. No entanto, é importante notar que, apesar da significância estatística, a magnitude do efeito prático é mínima.
 
 ## Caracterização do Ciclo Sazonal
 
@@ -278,14 +278,159 @@ A Sazonalidade pode ser percebida quando se é removido o componente de tendenci
 
 ## Fundamentos dos Modelos SARIMA
 
+O modelo SARIMA é uma extensão do modelo ARIMA que incorpora componentes sazonais, permitindo representar séries temporais que apresentam padrões de repetição em determinados intervalos de tempo. A construção do modelo SARIMA combina os componentes sazonais e não sazonais para capturar tanto a tendência quanto a estrutura repetitiva dos dados, sendo amplamente utilizado em séries como temperatura, vendas e produção.
+
+O modelo SARIMA, além de possuir os parâmetros (p), (d) e (q), também inclui parâmetros sazonais (P), (D) e (Q), bem como o período sazonal (s).
+
+**Em que:**
+
+- **Parâmetro sazonal AR (P):** o número de termos de auto-regressão sazonal.
+- **Parâmetro sazonal MA (Q):** o número de termos de média móvel sazonal.
+- **Diferenciação sazonal (D):** o número de diferenciações sazonais necessárias para tornar a série estacionária.
+- **Período sazonal (s):** indica o período da sazonalidade, como 12 para dados mensais com padrão anual.
+
 ## Pré-processamento: Testes de Estacionariedade
+
+Antes da aplicação do modelo SARIMA, é essencial verificar se a série temporal é estacionária, ou seja, se suas propriedades estatísticas, como média e variância, permanecem constantes ao longo do tempo. Para isso, utlizaremos o **teste de Dickey-Fuller aumentado (ADF)**, se o p-valor for valor-p \> 0,05, a série não é estacionária. Caso contrario, é considerada estacionária.
+
+```{r}
+adf.test(cananeia_ts)
+adf.test(ubatuba_ts)
+```
+
+Sendo assim, ao nível de 5% de significância, rejeita-se a hipotese nula, portanto, tanto a que a série para Cananeia quanto a série para Ubatuba são estacionárias. O valor da estatística também é bastante negativo, reforçando a evidência contra a não estacionariedade.
+
+### Teste de estacionariedade sazonal - Usando diferença sazonal
+
+Para verificar se é necessário diferenciar sazonalmente:
+
+```{r}
+nsdiffs(cananeia_ts)
+nsdiffs(ubatuba_ts)
+
+```
+
+Portanto, em ambas as séries, é necessário aplicar 1 diferença sazonal para alcançar estacionariedade.
+
+Para verificar se é necessário diferenciar não sazonalmente:
+
+```{r}
+ndiffs(cananeia_ts) 
+ndiffs(ubatuba_ts) 
+```
+
+Os resultados indicam que nenhuma das séries requer diferenciação não sazonal. Isso confirma o que foi observado no teste ADF: ambas já são estacionárias quanto à tendência.
 
 ## Identificação do Modelo: Análise ACF e PACF
 
+Após constatar a estacionáriedade da série, o próximo passo é identificar que nos ajudem a definir os parâmetros do modelo SARIMA. Como as séries exigiram **1 diferença sazonal** e nenhuma não sazonal, aplicamos **apenas a diferença sazonal** para realizar essa análise.. Isso é feito por meio da análise dos gráficos da **função de autocorrelação (ACF)** e da **função de autocorrelação parcial (PACF)**, que ajudam a detectar a presença de defasagens significativas na série, orientando a escolha de *p*, *q*, *P* e *Q*.
+
+Aplicação da Diferença Sazonal:
+
+```{r}
+# Aplicando 1 diferença sazonal (lag = 12)
+cananeia_diff <- diff(cananeia_ts, lag = 12)
+ubatuba_diff <- diff(ubatuba_ts, lag = 12)
+```
+
+**Figura [-@fig-acf_pcf_c]: ACF e PACF para a série Cananéia.**
+
+```{r}
+#| label: fig-acf_pcf_c
+par(mfrow = c(1, 2))  # Coloca os dois gráficos lado a lado
+acf(cananeia_diff, main = "ACF-Cananéia (Diferença Sazonal)  ")
+pacf(cananeia_diff, main = "PACF-Cananéia (Diferença Sazonal)    ")
+```
+
+**Figura [-@fig-acf_pcf_u]: ACF e PACF para a série Ubatuba.**
+
+```{r}
+#| label: fig-acf_pcf_u
+par(mfrow = c(1, 2))
+acf(ubatuba_diff, main = "ACF-Ubatuba (Diferença Sazonal)  ")
+pacf(ubatuba_diff, main = "PACF-Ubatuba (Diferença Sazonal)   ")
+```
+
 ## Estimação e Seleção do Modelo Final
+
+Com base na análise ACF e PACF, foram propostos modelos SARIMA candidatos para as séries de Ubatuba e Cananéia. Nesta etapa, esses modelos foram ajustados e comparados utiilizando os critérios de informação (AIC e BIC), para selecionar o que melhor se ajustar aos dados.
+
+### Ajuste e Comparação para a série de Cananéia
+
+```{r}
+# Modelo 1 para Cananéia
+modelo_cananeia_1 <- Arima(cananeia_ts, order = c(0,0,1), seasonal = c(1,1,1))
+
+# Modelo 2 para Cananéia
+modelo_cananeia_2 <- Arima(cananeia_ts, order = c(1,0,1), seasonal = c(1,1,1))
+
+# Comparação dos critérios
+AIC(modelo_cananeia_1); BIC(modelo_cananeia_1)
+AIC(modelo_cananeia_2); BIC(modelo_cananeia_2)
+```
+
+Para esse serie, o modelo 2 apresentou o menor AIC, sugerindo melhor ajuste aos dados. Entretanto, o modelo 1 teve menor BIC, indicando maior parcimônia. Sendo assim, considerando que o foco da análise é obter um modelo com melhor desempenho preditivo, optou-se pelo modelo 2 como o final para a série da Cananéia.
+
+### Ajuste e Comparação para a Série de Ubatuba
+
+```{r}
+# Modelo 1 para Ubatuba
+modelo_ubatuba_1 <- Arima(ubatuba_ts, order = c(1,0,1), seasonal = c(1,1,1))
+
+# Modelo 2 para Ubatuba
+modelo_ubatuba_2 <- Arima(ubatuba_ts, order = c(1,0,0), seasonal = c(1,1,1))
+
+# Comparação dos critérios
+AIC(modelo_ubatuba_1); BIC(modelo_ubatuba_1)
+AIC(modelo_ubatuba_2); BIC(modelo_ubatuba_2)
+```
+
+Sendo assim, o modelo 2 foi selecionado como o final para a série de Ubatuba, por apresentar os menores valores de AIC e BIC, indicando melhor equilíbrio entre qualidade do ajuste e simplicidade do modelo.
 
 # Diagnóstico do Modelo
 
-## Análise de Diagnóstico dos Resíduos
+## Análise de Diagnóstico dos Resíduos para os modelos finais {#sec-residuo}
+
+Após o ajuste dos modelos SARIMA para os dados de Cananéia e Ubatuba, é necessario realizar uma análise gráfica para verificar a adequação dos modelos em termos de autocorrelação e normalidade dos resíduos.
+
+```{r}
+checkresiduals(modelo_cananeia_2)
+checkresiduals(modelo_ubatuba_2) 
+```
+
+-   Os gráficos de ACF dos resíduos, para ambos os modelos, **não apresentam autocorrelações significativas**, sugerindo que os modelos escolhidos capturam bem a estrutura da série.
+-   O histograma dos resíduos, também em ambos os modelos, mostra uma distribuição aproximadamente normal, embora que haja uma leve assimetria.
+-   Os gráficos superiores indicam que os resíduos **flutuam em torno da média zero**, conforme o esperado.
+
+Conclui-se que, combinados aos resultados do teste de Ljung-Box (valor-p = 0.4958) e Ljung-Box (valor-p = 0.3114), respectivamente, os resíduos **se comportam como ruído branco**, validando os modelos ajustados.
 
 ## Algumas Previsões
+
+Após a validação dos modelos ajustados para as séries de Cananéia e Ubatuba, pode ser realizada previsão de valores futuros com base nas estruturas do modelo SARIMA.
+
+### Previsões para Cananéia
+
+```{r}
+# Previsão para os próximos 12 meses
+forecast_cananeia <- forecast(modelo_cananeia_2, h = 12)
+autoplot(forecast_cananeia) +
+  ggtitle("Previsão para Cananéia") +
+  ylab("Valores previstos") + xlab("Ano")
+```
+
+### Previsões para Ubatuba
+
+```{r}
+forecast_ubatuba <- forecast(modelo_ubatuba_2, h = 12)
+autoplot(forecast_ubatuba) +
+  ggtitle("Previsão para Ubatuba") +
+  ylab("Valores previstos") + xlab("Ano")
+```
+
+# Conclusão
+
+A análise comparativa das séries de temperatura de Cananéia e Ubatuba revela que, embora ambas sigam um forte ciclo sazonal, existem diferenças notáveis. Ubatuba é, em média, mais quente que Cananéia, mas esta última apresenta uma variabilidade ligeiramente maior nas suas temperaturas. Uma análise de tendência linear mostrou que, para o período de 1976 a 1985, não há evidência de uma tendência de aquecimento ou resfriamento em Cananéia, enquanto Ubatuba apresentou uma leve, mas estatisticamente significativa, tendência de resfriamento. A modelagem SARIMA quantifica estas dinâmicas subjacentes, que são moduladas pelas distintas geografias locais.
+
+A análise pode servir para identificar o impacto de fenómenos climáticos de larga escala. Eventos como o forte El Niño de 1982-1983 pode ter influenciado o clima local de formas diferentes como podemos ver nas séries temporais da Figura [-@fig-serie], onde em 1983 a cidade de Cananéia teve um aquecimento, mas a cidade de Ubatuba teve um resfriamento. Esse comportamento anomalo provavelmente foi a causa dos resíduos de maior magnitude nesse periodo, identificados na Subseção [-@sec-residuo] de análise dos resíduos dos modelos finais.
+
+Séries temporais prova ser uma metodologia adequada para compreender as dinâmicas climáticas. Como próximos passos, pesquisas futuras poderiam expandir a **extensão temporal**, analisando séries mais longas para verificar a estabilidade dos padrões observados; incluir **análise multivariada**, incorporando outras variáveis como precipitação, vento e temperatura da superfície do mar para construir modelos mais completos; e ter uma **expansão espacial**, replicando a análise para outras estações meteorológicas ao longo da costa para mapear gradientes climáticos com maior detalhe.
