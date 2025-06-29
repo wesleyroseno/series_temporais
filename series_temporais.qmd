@@ -116,7 +116,6 @@ leaflet(data = coords) %>%
 
 Os dados são de temperaturas médias mensais (°C) de janeiro de 1976 a dezembro de 1985. São duas séries temporais, cada uma com 120 observações.
 
-
 ```{r dados}
 df_raw <- readxl::read_excel(
   path = "dados/temperatura.xls",
@@ -156,7 +155,6 @@ df_raw %>%
 
 **Tabela [-@tbl-descritiva]: Estatísticas Descritivas das Temperaturas Médias Mensais (°C)**
 
-
 ```{r}
 #| label: tbl-descritiva
 #| tbl-cap: ""
@@ -188,7 +186,7 @@ knitr::kable(df_resumo,
              )
 ```
 
-A Tabela [-@tbl-descritiva] quantifica que Ubatuba é, em média, 0,9°C mais quente, sendo maior também  a sua temperatura mediana. E apesar de Ubatuba ter a menor e maior temperatura, Cananéia apresenta um desvio padrão ligeiramente maior, indicando maior variabilidade em torno da sua média.
+A Tabela [-@tbl-descritiva] quantifica que Ubatuba é, em média, 0,9°C mais quente, sendo maior também a sua temperatura mediana. E apesar de Ubatuba ter a menor e maior temperatura, Cananéia apresenta um desvio padrão ligeiramente maior, indicando maior variabilidade em torno da sua média.
 
 # Decomposição Estrutural das Séries Temporais
 
@@ -200,13 +198,12 @@ $$
 Z_t = T_t + S_t + a_t
 $$ {#eq-decomp}
 
-Onde:
+Em que:
 
-* $Z_t$ é a observação da série temporal no instante $t$;
-* $T_t$ representa a componente de tendência;
-* $S_t$ representa a componente de sazonalidade;
-* $a_t$ é o termo de ruído.
-
+-   $Z_t$ é a observação da série temporal no instante $t$;
+-   $T_t$ representa a componente de tendência;
+-   $S_t$ representa a componente de sazonalidade;
+-   $a_t$ é o termo de ruído.
 
 ## Análise do Componente de Tendência
 
@@ -232,11 +229,12 @@ print(summary(modelo_cananeia))
 cat("--- Intervalo de Confiança (95%) para Cananéia ---\n")
 print(confint(modelo_cananeia))
 ```
+
 Para Cananéia, o modelo de regressão não encontrou uma tendência temporal estatisticamente significativa. A análise dos resultados confirma esta conclusão de duas maneiras principais:
 
-- P-valor: O coeficiente para a variável de tempo (Ano) foi de -4.955e-05, um valor extremamente próximo de zero. O p-valor associado a este coeficiente é de 0.841, que é muito superior ao nível de significância padrão de 0.05. Isso indica que não há evidências para rejeitar a hipótese nula de que o coeficiente é igual a zero.
+-   P-valor: O coeficiente para a variável de tempo (Ano) foi de -4.955e-05, um valor extremamente próximo de zero. O p-valor associado a este coeficiente é de 0.841, que é muito superior ao nível de significância padrão de 0.05. Isso indica que não há evidências para rejeitar a hipótese nula de que o coeficiente é igual a zero.
 
-- Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de [-0.000536, 0.000437]. Como este intervalo contém o valor zero, temos uma forte confirmação de que a pequena tendência observada nos dados é indistinguível de uma variação aleatória.
+-   Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de \[-0.000536, 0.000437\]. Como este intervalo contém o valor zero, temos uma forte confirmação de que a pequena tendência observada nos dados é indistinguível de uma variação aleatória.
 
 Conclusão para Cananéia: Não há evidência estatística de uma tendência de aquecimento ou resfriamento em Cananéia durante o período de 1976 a 1985.
 
@@ -264,9 +262,9 @@ print(confint(modelo_ubatuba))
 
 Para Ubatuba, a análise revela um resultado diferente. O modelo encontrou uma tendência pequena de resfriamento, mas estatisticamente significativa:
 
-- P-valor: O coeficiente para a variável de tempo foi de -0.000647, indicando uma leve tendência de resfriamento. O p-valor associado é de 0.00538, que é significativamente inferior a 0.05. Isso sugere que a tendência observada é improvável de ter ocorrido por acaso.
+-   P-valor: O coeficiente para a variável de tempo foi de -0.000647, indicando uma leve tendência de resfriamento. O p-valor associado é de 0.00538, que é significativamente inferior a 0.05. Isso sugere que a tendência observada é improvável de ter ocorrido por acaso.
 
-- Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de [-0.00110, -0.00020]. Crucialmente, este intervalo não contém o valor zero e está inteiramente no campo negativo. Isso reforça a conclusão de que existe uma tendência de resfriamento estatisticamente significativa, embora a sua magnitude seja muito pequena (uma redução de aproximadamente 0.00065 °C por mês).
+-   Intervalo de Confiança: O intervalo de confiança de 95% para o coeficiente de tempo é de \[-0.00110, -0.00020\]. Crucialmente, este intervalo não contém o valor zero e está inteiramente no campo negativo. Isso reforça a conclusão de que existe uma tendência de resfriamento estatisticamente significativa, embora a sua magnitude seja muito pequena (uma redução de aproximadamente 0.00065 °C por mês).
 
 Conclusão para Ubatuba: Há evidência estatística de uma leve tendência de resfriamento em Ubatuba durante o período analisado. No entanto, é importante notar que, apesar da significância estatística, a magnitude do efeito prático é mínima.
 
@@ -284,10 +282,10 @@ O modelo SARIMA, além de possuir os parâmetros (p), (d) e (q), também inclui 
 
 **Em que:**
 
-- **Parâmetro sazonal AR (P):** o número de termos de auto-regressão sazonal.
-- **Parâmetro sazonal MA (Q):** o número de termos de média móvel sazonal.
-- **Diferenciação sazonal (D):** o número de diferenciações sazonais necessárias para tornar a série estacionária.
-- **Período sazonal (s):** indica o período da sazonalidade, como 12 para dados mensais com padrão anual.
+-   **Parâmetro sazonal AR (P):** o número de termos de auto-regressão sazonal.
+-   **Parâmetro sazonal MA (Q):** o número de termos de média móvel sazonal.
+-   **Diferenciação sazonal (D):** o número de diferenciações sazonais necessárias para tornar a série estacionária.
+-   **Período sazonal (s):** indica o período da sazonalidade, como 12 para dados mensais com padrão anual.
 
 ## Pré-processamento: Testes de Estacionariedade
 
@@ -323,7 +321,7 @@ Os resultados indicam que nenhuma das séries requer diferenciação não sazona
 
 ## Identificação do Modelo: Análise ACF e PACF
 
-Após constatar a estacionáriedade da série, o próximo passo é identificar que nos ajudem a definir os parâmetros do modelo SARIMA. Como as séries exigiram **1 diferença sazonal** e nenhuma não sazonal, aplicamos **apenas a diferença sazonal** para realizar essa análise.. Isso é feito por meio da análise dos gráficos da **função de autocorrelação (ACF)** e da **função de autocorrelação parcial (PACF)**, que ajudam a detectar a presença de defasagens significativas na série, orientando a escolha de *p*, *q*, *P* e *Q*.
+Após constatar a estacionáriedade da série, o próximo passo é identificar que nos ajudem a definir os parâmetros do modelo SARIMA. Como as séries exigiram 1 diferença sazonal e nenhuma não sazonal, aplicamos apenas a diferença sazonalpara realizar essa análise. Isso é feito por meio da análise dos gráficos da função de autocorrelação (ACF) e da função de autocorrelação parcial (PACF), que ajudam a detectar a presença de defasagens significativas na série, orientando a escolha de *p*, *q*, *P* e *Q*.
 
 Aplicação da Diferença Sazonal:
 
@@ -357,14 +355,27 @@ Com base na análise ACF e PACF, foram propostos modelos SARIMA candidatos para 
 
 ### Ajuste e Comparação para a série de Cananéia
 
+Modelo 1 vs 2 para Cananéia
 ```{r}
-# Modelo 1 para Cananéia
+# Modelo 1
 modelo_cananeia_1 <- Arima(cananeia_ts, order = c(0,0,1), seasonal = c(1,1,1))
+modelo_cananeia_1
 
-# Modelo 2 para Cananéia
+# Modelo 2 
 modelo_cananeia_2 <- Arima(cananeia_ts, order = c(1,0,1), seasonal = c(1,1,1))
+modelo_cananeia_2
+```
 
-# Comparação dos critérios
+Notamos então que, em ambos os modelos, há presença de termos sazonais. Assim, os modelos estimados foram:
+
+-   **Modelo SARIMA(0,0,1)(1,1,1)\[12\]**:\
+    $$ Z_t = 0{,}3158a_{t−1} - 0{,}0118Z_{t−12} - 1{,}0000a_{t−12} + a_t $$
+
+-   **Modelo SARIMA(1,0,1)(1,1,1)\[12\]**:\
+    $$ Z_t = 0{,}4357Z_{t−1} - 0{,}0762a_{t−1} - 0{,}0236Z_{t−12} - 1{,}0000a_{t−12} + a_t $$
+
+Comparação dos critérios AIC e BIC para os modelos 1 e 2:
+```{r}
 AIC(modelo_cananeia_1); BIC(modelo_cananeia_1)
 AIC(modelo_cananeia_2); BIC(modelo_cananeia_2)
 ```
@@ -373,13 +384,26 @@ Para esse serie, o modelo 2 apresentou o menor AIC, sugerindo melhor ajuste aos 
 
 ### Ajuste e Comparação para a Série de Ubatuba
 
+ Modelo 1 vs 2 para Ubatuba
 ```{r}
-# Modelo 1 para Ubatuba
+# Modelo 1 
 modelo_ubatuba_1 <- Arima(ubatuba_ts, order = c(1,0,1), seasonal = c(1,1,1))
-
-# Modelo 2 para Ubatuba
+modelo_ubatuba_1
+# Modelo 2 
 modelo_ubatuba_2 <- Arima(ubatuba_ts, order = c(1,0,0), seasonal = c(1,1,1))
+modelo_ubatuba_2
+```
 
+Notamos então que, em ambos os modelos, há presença de termos sazonais. Assim, os modelos estimados foram:
+
+-   **Modelo SARIMA(1,0,1)(1,1,1)\[12\]**:\
+    $$ Z_t = 0{,}7815Z_{t−1} - 0{,}1637a_{t−1} + 0{,}1076Z_{t−12} - 0{,}9178a_{t−12} + a_t $$
+
+-   **Modelo SARIMA(1,0,0)(1,1,1)\[12\]**:\
+    $$ Z_t = 0{,}6971Z_{t−1} + 0{,}1130Z_{t−12} - 0{,}9022a_{t−12} + a_t $$
+
+Comparação dos critérios AIC e BIC para os modelos 1 e 2:
+```{r}
 # Comparação dos critérios
 AIC(modelo_ubatuba_1); BIC(modelo_ubatuba_1)
 AIC(modelo_ubatuba_2); BIC(modelo_ubatuba_2)
@@ -398,11 +422,11 @@ checkresiduals(modelo_cananeia_2)
 checkresiduals(modelo_ubatuba_2) 
 ```
 
--   Os gráficos de ACF dos resíduos, para ambos os modelos, **não apresentam autocorrelações significativas**, sugerindo que os modelos escolhidos capturam bem a estrutura da série.
+-   Os gráficos de ACF dos resíduos, para ambos os modelos, não apresentam autocorrelações significativas, sugerindo que os modelos escolhidos capturam bem a estrutura da série.
 -   O histograma dos resíduos, também em ambos os modelos, mostra uma distribuição aproximadamente normal, embora que haja uma leve assimetria.
--   Os gráficos superiores indicam que os resíduos **flutuam em torno da média zero**, conforme o esperado.
+-   Os gráficos superiores indicam que os resíduos flutuam em torno da média zero, conforme o esperado.
 
-Conclui-se que, combinados aos resultados do teste de Ljung-Box (valor-p = 0.4958) e Ljung-Box (valor-p = 0.3114), respectivamente, os resíduos **se comportam como ruído branco**, validando os modelos ajustados.
+Conclui-se que, combinados aos resultados do teste de Ljung-Box (valor-p = 0.4958) e Ljung-Box (valor-p = 0.3114), respectivamente, os resíduos se comportam como ruído branco, validando os modelos ajustados.
 
 ## Algumas Previsões
 
@@ -410,20 +434,90 @@ Após a validação dos modelos ajustados para as séries de Cananéia e Ubatuba
 
 ### Previsões para Cananéia
 
+```{r tabela-sarima-estilo-latex, echo=FALSE, message=FALSE}
+library(knitr)
+library(kableExtra)
+
+val_prev_cananeia <- predict(modelo_cananeia_2, n.ahead=12)
+
+# Dados da previsão
+meses <- c("Jan", "Fev", "Mar", "Abr", "Maio", "Jun",
+           "Jul", "Ago", "Set", "Out", "Nov", "Dez")
+valores <- c(24.77568, 25.46487, 24.52220, 22.23292, 20.57405, 18.14654,
+             18.04329, 18.09627, 18.92109, 21.02668, 22.58554, 23.96205)
+se <- c(0.9316235, 0.9894350, 1.0000344, 1.0020342, 1.0024135, 1.0024855,
+        1.0024990, 1.0025010, 1.0024984, 1.0024818, 1.0023942, 1.0019323)
+
+# Tabela com 2 blocos: Jan–Jun e Jul–Dez
+tabela <- data.frame(
+  Mês1 = meses[1:6],
+  Previsao1 = round(valores[1:6], 3),
+  SE1 = round(se[1:6], 3),
+  Mês2 = meses[7:12],
+  Previsao2 = round(valores[7:12], 3),
+  SE2 = round(se[7:12], 3)
+)
+
+# Criar a tabela
+kable(tabela, booktabs = TRUE, align = "c",
+      col.names = c("Mês", "$$\\hat{Z}_{t+i}$$", "S.E.",
+                    "Mês", "$$\\hat{Z}_{t+i}$$", "S.E."),
+      caption = "Valores previstos pelo modelo SARIMA ajustado à Série Cananéia, para os meses de Jan a Dez de 1986.") %>%
+  kable_styling(latex_options = c("HOLD_position", "striped", "scale_down")) %>%
+  add_header_above(c(" " = 3, " " = 3))
+```
+
 ```{r}
 # Previsão para os próximos 12 meses
 forecast_cananeia <- forecast(modelo_cananeia_2, h = 12)
 autoplot(forecast_cananeia) +
-  ggtitle("Previsão para Cananéia") +
+  ggtitle("Gráfico de previsões para Cananéia") +
   ylab("Valores previstos") + xlab("Ano")
 ```
 
 ### Previsões para Ubatuba
 
+```{r tabela-ubatuba, echo=FALSE, message=FALSE}
+
+val_prev_ubatuba <- predict(modelo_ubatuba_2, n.ahead=12)
+
+library(knitr)
+library(kableExtra)
+
+# Vetores com os dados
+meses <- c("Jan", "Fev", "Mar", "Abr", "Maio", "Jun",
+           "Jul", "Ago", "Set", "Out", "Nov", "Dez")
+
+valores <- c(25.10110, 26.04463, 24.83549, 22.65839, 21.13006, 19.56434,
+             19.46188, 19.82809, 20.00026, 21.72412, 23.14859, 24.20826)
+
+se <- c(1.108920, 1.350272, 1.453146, 1.500586, 1.523099, 1.533909,
+        1.539113, 1.541592, 1.542706, 1.543064, 1.542861, 1.541986)
+
+# Dividir a tabela para exibir lado a lado
+df <- data.frame(
+  Mês = meses[1:6],
+  Previsão = round(valores[1:6], 2),
+  `Erro Padrão` = round(se[1:6], 2),
+  Mês2 = meses[7:12],
+  Previsão2 = round(valores[7:12], 2),
+  `Erro Padrão2` = round(se[7:12], 2)
+)
+
+# Criar tabela
+
+kable(df, booktabs = TRUE, align = "c",
+      col.names = c("Mês", "$$\\hat{Z}_{t+i}$$", "S.E.",
+                    "Mês", "$$\\hat{Z}_{t+i}$$", "S.E."),
+      caption = "Valores previstos pelo modelo SARIMA ajustado à Série Ubatuba, para os meses de Jan a Dez de 1986.") %>%
+  kable_styling(latex_options = c("HOLD_position", "striped", "scale_down")) %>%
+  add_header_above(c(" " = 3, " " = 3))
+```
+
 ```{r}
 forecast_ubatuba <- forecast(modelo_ubatuba_2, h = 12)
 autoplot(forecast_ubatuba) +
-  ggtitle("Previsão para Ubatuba") +
+  ggtitle("Gráfico de previsões para Ubatuba") +
   ylab("Valores previstos") + xlab("Ano")
 ```
 
@@ -433,4 +527,4 @@ A análise comparativa das séries de temperatura de Cananéia e Ubatuba revela 
 
 A análise pode servir para identificar o impacto de fenómenos climáticos de larga escala. Eventos como o forte El Niño de 1982-1983 pode ter influenciado o clima local de formas diferentes como podemos ver nas séries temporais da Figura [-@fig-serie], onde em 1983 a cidade de Cananéia teve um aquecimento, mas a cidade de Ubatuba teve um resfriamento. Esse comportamento anomalo provavelmente foi a causa dos resíduos de maior magnitude nesse periodo, identificados na Subseção [-@sec-residuo] de análise dos resíduos dos modelos finais.
 
-Séries temporais prova ser uma metodologia adequada para compreender as dinâmicas climáticas. Como próximos passos, pesquisas futuras poderiam expandir a **extensão temporal**, analisando séries mais longas para verificar a estabilidade dos padrões observados; incluir **análise multivariada**, incorporando outras variáveis como precipitação, vento e temperatura da superfície do mar para construir modelos mais completos; e ter uma **expansão espacial**, replicando a análise para outras estações meteorológicas ao longo da costa para mapear gradientes climáticos com maior detalhe.
+Séries temporais prova ser uma metodologia adequada para compreender as dinâmicas climáticas. Como próximos passos, pesquisas futuras poderiam expandir a extensão temporal, analisando séries mais longas para verificar a estabilidade dos padrões observados; incluir análise multivariada, incorporando outras variáveis como precipitação, vento e temperatura da superfície do mar para construir modelos mais completos; e ter uma expansão espacial, replicando a análise para outras estações meteorológicas ao longo da costa para mapear gradientes climáticos com maiores detalhes.
